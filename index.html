@@ -1,0 +1,1501 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mensajero del Corazón</title>
+    <!-- FAVICON (Logo en la pestaña del navegador) -->
+    <link rel="icon" type="image/png" href="https://cdn.pixabay.com/photo/2013/07/12/13/45/heart-147246_640.png">
+    <!-- FontAwesome para íconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #c2185b;
+            --primary-dark: #8e0038;
+            --primary-soft: #fce4ec;
+            --secondary: #f8bbd0;
+            --accent-gold: #ffa000;
+            --text-dark: #2c3e50;
+            --text-light: #555555;
+            --bg-light: #fcf8f9;
+            --card-bg: #ffffff;
+            --header-bg: linear-gradient(180deg, #ffffff 0%, #fff5f8 100%);
+            --white: #ffffff;
+            --shadow-soft: 0 8px 20px rgba(194, 24, 91, 0.07);
+            --shadow-hover: 0 12px 28px rgba(0,0,0,0.12);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        /* --- MODO OSCURO --- */
+        body.dark-mode {
+            --bg-light: #121212;
+            --card-bg: #1e1e1e;
+            --text-dark: #f1f1f1;
+            --text-light: #b0b0b0;
+            --header-bg: linear-gradient(180deg, #1a1a1a 0%, #121212 100%);
+            --shadow-soft: 0 8px 20px rgba(0, 0, 0, 0.5);
+            --shadow-hover: 0 12px 28px rgba(0, 0, 0, 0.7);
+        }
+
+        body.dark-mode header,
+        body.dark-mode .category-card,
+        body.dark-mode .product-card,
+        body.dark-mode .faq-item,
+        body.dark-mode .cart-modal,
+        body.dark-mode .custom-modal,
+        body.dark-mode .settings-modal,
+        body.dark-mode footer {
+            background-color: var(--card-bg) !important;
+            color: var(--text-dark) !important;
+        }
+
+        body.dark-mode .social-links a,
+        body.dark-mode .back-btn {
+            background-color: #2a2a2a;
+            color: var(--text-dark);
+            border-color: #333;
+        }
+
+        body.dark-mode .intro-title,
+        body.dark-mode .section-title,
+        body.dark-mode .product-title,
+        body.dark-mode .logo-text {
+            color: #ff80ab !important;
+        }
+
+        body.dark-mode .form-group input,
+        body.dark-mode .custom-textarea {
+            background-color: #2a2a2a;
+            color: white;
+            border-color: #444;
+        }
+
+        /* --- MODO DALTÓNICO --- */
+        body.cb-mode {
+            --primary: #005ab5;
+            --primary-dark: #003366;
+            --primary-soft: #e6f0fa;
+            --secondary: #78b4f0;
+        }
+
+        body.cb-mode a, 
+        body.cb-mode button {
+            text-decoration: underline !important;
+            font-weight: 700 !important;
+        }
+
+        /* --- AYUDA PARA INATENCIÓN --- */
+        body.focus-mode *,
+        body.focus-mode .custom-float-container,
+        body.focus-mode .custom-float-btn {
+            animation: none !important;
+            transition: none !important;
+        }
+
+        body.focus-mode .product-card:hover,
+        body.focus-mode .category-card:hover {
+            outline: 4px solid var(--primary) !important;
+            transform: none !important;
+        }
+
+        /* --- ALL AGES FRIENDLY --- */
+        body.all-ages-mode {
+            font-size: 1.15rem;
+        }
+
+        body.all-ages-mode .category-btn,
+        body.all-ages-mode .add-cart-btn,
+        body.all-ages-mode .checkout-btn,
+        body.all-ages-mode .whatsapp-btn,
+        body.all-ages-mode .back-btn {
+            font-size: 1.05rem !important;
+            padding: 14px 28px !important;
+            letter-spacing: 1px !important;
+        }
+
+        body.all-ages-mode .category-subtitle,
+        body.all-ages-mode .product-desc,
+        body.all-ages-mode .intro-text {
+            font-size: 1.1rem !important;
+        }
+
+        /* ESTILOS BASE */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-dark);
+            background-color: var(--bg-light);
+            line-height: 1.6;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* HEADER & HERO */
+        header {
+            background: var(--header-bg);
+            text-align: center;
+            padding: 25px 15px 30px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.04);
+            position: relative;
+            border-bottom: 2px solid var(--primary-soft);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-bottom: 18px;
+        }
+
+        .social-links a {
+            color: var(--text-dark);
+            font-size: 0.9rem;
+            transition: var(--transition);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600;
+            padding: 6px 14px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+        .social-links a:hover {
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .hero-logo {
+            max-width: 290px;
+            margin: 0 auto;
+            display: block;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.05));
+        }
+
+        .logo-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.75rem;
+            letter-spacing: 3px;
+            color: var(--primary-dark);
+            text-transform: uppercase;
+            margin-top: 10px;
+            font-weight: 700;
+        }
+
+        /* INTRO SECTION */
+        .intro-section {
+            max-width: 820px;
+            margin: 35px auto;
+            text-align: center;
+            padding: 0 20px;
+            position: relative;
+        }
+
+        .intro-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            color: #111;
+            margin-bottom: 15px;
+        }
+
+        .intro-text {
+            color: var(--text-light);
+            font-size: 1rem;
+            margin-bottom: 10px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .badge-quote {
+            display: inline-block;
+            margin-top: 25px;
+            padding: 12px 24px;
+            background: var(--card-bg);
+            border-left: 4px solid var(--primary);
+            border-radius: 0 12px 12px 0;
+            box-shadow: var(--shadow-soft);
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        /* CATEGORIES SECTION */
+        .categories-section {
+            max-width: 1050px;
+            margin: 50px auto;
+            padding: 0 20px;
+            text-align: center;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            margin-bottom: 35px;
+            position: relative;
+            display: inline-block;
+            color: var(--primary-dark);
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+            gap: 22px;
+            justify-content: center;
+        }
+
+        .category-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 24px 18px;
+            box-shadow: var(--shadow-soft);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 1px solid rgba(194, 24, 91, 0.08);
+        }
+
+        .category-card:hover {
+            transform: translateY(-7px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--secondary);
+        }
+
+        .heart-img {
+            width: 115px;
+            height: 115px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-bottom: 16px;
+            transition: var(--transition);
+            box-shadow: 0 6px 14px rgba(0,0,0,0.1);
+            border: 3px solid var(--white);
+        }
+
+        .category-card:hover .heart-img {
+            transform: scale(1.08);
+        }
+
+        .category-subtitle {
+            font-size: 0.88rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .category-btn {
+            width: 100%;
+            padding: 10px 0;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: var(--white);
+            border: none;
+            border-radius: 25px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: var(--transition);
+            box-shadow: 0 4px 10px rgba(194, 24, 91, 0.2);
+            cursor: pointer;
+        }
+
+        .category-card:hover .category-btn {
+            background: linear-gradient(135deg, var(--primary-dark), #600023);
+        }
+
+        /* PRODUCTS SECTION */
+        .products-section {
+            max-width: 920px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: none;
+        }
+
+        .products-section.active {
+            display: block;
+        }
+
+        .back-btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: var(--white);
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 30px;
+            font-size: 1rem;
+            padding: 14px 28px;
+            border-radius: 35px;
+            box-shadow: 0 6px 18px rgba(194, 24, 91, 0.3);
+            transition: var(--transition);
+            border: none;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 22px rgba(194, 24, 91, 0.4);
+        }
+
+        .sub-header-tag {
+            font-size: 0.8rem;
+            color: var(--primary);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .sub-header-quote {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            font-style: italic;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .product-list {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .product-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow-soft);
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+            border: 1px solid rgba(0,0,0,0.04);
+        }
+
+        .product-card:hover {
+            box-shadow: var(--shadow-hover);
+        }
+
+        @media (min-width: 600px) {
+            .product-card {
+                flex-direction: row;
+                align-items: center;
+            }
+        }
+
+        .product-img {
+            width: 100%;
+            height: 230px;
+            object-fit: cover;
+        }
+
+        @media (min-width: 600px) {
+            .product-img {
+                width: 42%;
+                height: 230px;
+            }
+        }
+
+        .product-info {
+            padding: 24px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .product-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.55rem;
+            color: var(--primary-dark);
+            margin-bottom: 8px;
+        }
+
+        .product-desc {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .product-price {
+            font-weight: 700;
+            color: var(--text-dark);
+            font-size: 1.2rem;
+            margin-bottom: 18px;
+        }
+
+        .add-cart-btn {
+            align-self: flex-start;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: var(--white);
+            border: none;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 12px rgba(194, 24, 91, 0.25);
+        }
+
+        .add-cart-btn:hover {
+            transform: scale(1.04);
+            background: linear-gradient(135deg, var(--primary-dark), #600023);
+        }
+
+        /* FAQ */
+        .faq-section {
+            max-width: 820px;
+            margin: 60px auto 40px;
+            padding: 0 20px;
+        }
+
+        .faq-item {
+            background: var(--card-bg);
+            border-radius: 12px;
+            margin-bottom: 14px;
+            box-shadow: var(--shadow-soft);
+            overflow: hidden;
+            border: 1px solid rgba(0,0,0,0.04);
+            transition: var(--transition);
+        }
+
+        .faq-question {
+            width: 100%;
+            padding: 18px 22px;
+            background: none;
+            border: none;
+            text-align: left;
+            font-weight: 700;
+            font-size: 0.98rem;
+            color: var(--text-dark);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-answer {
+            padding: 0 22px 20px 22px;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            display: none;
+            line-height: 1.7;
+            border-top: 1px solid var(--bg-light);
+        }
+
+        .faq-item.open .faq-answer {
+            display: block;
+        }
+
+        .faq-item.open .faq-question i {
+            transform: rotate(180deg);
+            color: var(--primary);
+        }
+
+        /* BOTONES FLOTANTES */
+        .settings-float-btn {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            background: #333333;
+            color: white;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            z-index: 99;
+            transition: var(--transition);
+        }
+
+        .settings-float-btn:hover {
+            transform: rotate(90deg) scale(1.08);
+            background: #111;
+        }
+
+        .cart-float-btn {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 6px 20px rgba(194, 24, 91, 0.4);
+            cursor: pointer;
+            z-index: 99;
+            transition: var(--transition);
+        }
+
+        .cart-float-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .custom-float-container {
+            position: fixed;
+            bottom: 25px;
+            left: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 99;
+            animation: subtleFloat 3s ease-in-out infinite;
+        }
+
+        .custom-float-btn {
+            background: linear-gradient(135deg, #ff9800, #f57c00);
+            color: white;
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 6px 20px rgba(255, 152, 0, 0.4);
+            cursor: pointer;
+            transition: var(--transition);
+            animation: pulseGlow 2s infinite;
+        }
+
+        .custom-float-btn:hover {
+            transform: scale(1.12) rotate(15deg);
+        }
+
+        .custom-btn-label {
+            background: #111;
+            color: #fff;
+            padding: 10px 16px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            white-space: nowrap;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .flying-dot {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background-color: #d32f2f;
+            border-radius: 50%;
+            z-index: 9999;
+            pointer-events: none;
+            box-shadow: 0 0 12px rgba(211, 47, 47, 0.8);
+            transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        @keyframes subtleFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(2deg); }
+        }
+
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 0 0 rgba(255, 152, 0, 0.6); }
+            70% { box-shadow: 0 0 0 16px rgba(255, 152, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 152, 0, 0); }
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: #222;
+            color: white;
+            font-size: 0.8rem;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            border: 2px solid white;
+        }
+
+        /* MODALS & OVERLAY */
+        .cart-modal, .custom-modal, .settings-modal {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            max-width: 420px;
+            height: 100%;
+            background: var(--card-bg);
+            box-shadow: 0 0 30px rgba(0,0,0,0.25);
+            z-index: 100;
+            transition: all 0.35s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cart-modal { right: -100%; }
+        .cart-modal.open { right: 0; }
+
+        .custom-modal { left: -100%; }
+        .custom-modal.open { left: 0; }
+
+        .settings-modal { right: -100%; }
+        .settings-modal.open { right: 0; }
+
+        .modal-header {
+            padding: 20px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            font-size: 1.2rem;
+        }
+
+        /* BOTÓN DE CIERRE EN TEXTO SIMPLE (X) */
+        .modal-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            padding: 5px 12px;
+            line-height: 1;
+            transition: opacity 0.2s;
+        }
+
+        .modal-close:hover {
+            opacity: 0.7;
+        }
+
+        .modal-body {
+            padding: 22px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        /* CONFIGURACIÓN TOGGLES */
+        .setting-option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.08);
+        }
+
+        .setting-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .setting-info i {
+            font-size: 1.2rem;
+            color: var(--primary);
+            width: 24px;
+            text-align: center;
+        }
+
+        .setting-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+        }
+
+        .setting-desc {
+            font-size: 0.78rem;
+            color: var(--text-light);
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 26px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #ccc;
+            transition: .3s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(22px);
+        }
+
+        .delivery-form {
+            margin-top: 22px;
+            padding-top: 18px;
+            border-top: 2px dashed #e0e0e0;
+        }
+
+        .delivery-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 6px;
+        }
+
+        .delivery-sub {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-bottom: 14px;
+            background: var(--primary-soft);
+            padding: 10px;
+            border-radius: 8px;
+            border-left: 3px solid var(--primary);
+        }
+
+        /* AVISO DE ZONA GEOGRÁFICA */
+        .geo-notice-box {
+            background-color: #e8f4fd;
+            border-left: 4px solid #2196f3;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 14px;
+            font-size: 0.82rem;
+            color: #0d47a1;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-weight: 600;
+        }
+
+        .geo-notice-box i {
+            color: #2196f3;
+            font-size: 1rem;
+            margin-top: 2px;
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.82rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.9rem;
+        }
+
+        .price-notice-box {
+            background-color: #fff8e1;
+            border-left: 4px solid #ffa000;
+            padding: 14px;
+            border-radius: 8px;
+            margin-bottom: 18px;
+            font-size: 0.85rem;
+            color: #795548;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .price-notice-box i {
+            color: #ffa000;
+            font-size: 1.1rem;
+            margin-top: 2px;
+        }
+
+        .custom-textarea {
+            width: 100%;
+            height: 130px;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.92rem;
+            resize: none;
+            margin-top: 10px;
+            margin-bottom: 15px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cart-item-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+        }
+
+        .cart-item-desc {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .cart-remove {
+            color: #d32f2f;
+            cursor: pointer;
+            font-size: 0.95rem;
+            margin-left: 12px;
+            padding: 6px;
+        }
+
+        .cart-footer, .custom-footer {
+            padding: 22px;
+            border-top: 1px solid #eee;
+            background: var(--card-bg);
+        }
+
+        .cart-total {
+            font-weight: 700;
+            font-size: 1.15rem;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .checkout-btn, .whatsapp-btn {
+            width: 100%;
+            padding: 14px;
+            background-color: #25D366;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 0.95rem;
+            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+            transition: var(--transition);
+        }
+
+        .checkout-btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            box-shadow: 0 4px 12px rgba(194, 24, 91, 0.3);
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.45);
+            backdrop-filter: blur(2px);
+            z-index: 98;
+            display: none;
+        }
+
+        .overlay.open {
+            display: block;
+        }
+
+        footer {
+            text-align: center;
+            padding: 35px 20px;
+            background: var(--card-bg);
+            margin-top: 70px;
+            border-top: 1px solid #eee;
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- BOTÓN FLOTANTE DE AJUSTES (ARRIBA A LA DERECHA) -->
+    <div class="settings-float-btn" onclick="toggleSettingsModal()" title="Accesibilidad y Opciones">
+        <i class="fas fa-cog"></i>
+    </div>
+
+    <!-- HEADER -->
+    <header>
+        <div class="social-links">
+            <a href="https://www.instagram.com/mensajerodelcorazon/" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
+            <a href="https://www.tiktok.com/@mensajerodelcorazon" target="_blank"><i class="fab fa-tiktok"></i> TikTok</a>
+        </div>
+        <svg class="hero-logo" viewBox="0 0 300 120" width="100%">
+            <path d="M 150 15 A 45 45 0 0 1 195 60 A 45 45 0 0 1 150 105 A 45 45 0 0 1 105 60 A 45 45 0 0 1 150 15 Z" fill="none" stroke="#f48fb1" stroke-width="4" opacity="0.6"/>
+            <path d="M 125 75 A 12 12 0 1 0 125 75.1 M 175 75 A 12 12 0 1 0 175 75.1" fill="none" stroke="#555" stroke-width="3"/>
+            <path d="M 125 75 L 140 55 L 160 55 L 175 75 M 140 55 L 150 75 L 165 55 M 135 50 L 145 50 M 165 55 L 170 45 L 175 45" fill="none" stroke="#555" stroke-width="2.5" stroke-linecap="round"/>
+            <rect x="171" y="42" width="10" height="8" fill="none" stroke="#555" stroke-width="1.5"/>
+            <path d="M 173 42 L 176 46 L 179 42" fill="none" stroke="#c2185b" stroke-width="1.5"/>
+        </svg>
+        <div class="logo-text">Mensajero del Corazón</div>
+    </header>
+
+    <!-- INTRODUCCIÓN -->
+    <section class="intro-section">
+        <h1 class="intro-title">Hay cosas que cuesta decir.</h1>
+        <p class="intro-text">¿Te da vergüenza, estás lejos o no sabés cómo sorprender a esa persona?</p>
+        <p class="intro-text"><strong>Tranqui, nosotros te ayudamos.</strong></p>
+        <p class="intro-text">Contanos qué querés decir y nosotros nos encargamos de llevarlo hasta esa persona, con todo el cariño que merece.</p>
+        <div class="badge-quote">
+            <strong>🌹 Mensajero del Corazón</strong><br>
+            <span style="color: #666;">Vos sentís. Nosotros lo llevamos.</span>
+        </div>
+    </section>
+
+    <!-- SECCIÓN DE CATEGORÍAS -->
+    <section class="categories-section" id="categories-sec">
+        <h2 class="section-title">Nuestros Servicios</h2>
+        <div class="categories-grid">
+            <div class="category-card" onclick="showCategory('amor')">
+                <img src="https://i.postimg.cc/3wBMrgVW/colorchange.png" class="heart-img" alt="Amor Romántico">
+                <div class="category-subtitle">Para Alguien Especial</div>
+                <button class="category-btn">Amor Romántico</button>
+            </div>
+            <div class="category-card" onclick="showCategory('agradecimiento')">
+                <img src="https://i.postimg.cc/hGgWqCyq/Whats-App-Image-2026-09-28-at-11-01-10-PM.jpg" class="heart-img" alt="Agradecimiento">
+                <div class="category-subtitle">Gracias de Corazón</div>
+                <button class="category-btn">Agradecimiento</button>
+            </div>
+            <div class="category-card" onclick="showCategory('familia')">
+                <img src="https://i.postimg.cc/zf5Z1dtY/Whats-App-Image-2026-09-28-at-11-03-30-PM.jpg" class="heart-img" alt="Amor Familiar">
+                <div class="category-subtitle">Para Quienes Queremos</div>
+                <button class="category-btn">Amor Familiar</button>
+            </div>
+            <div class="category-card" onclick="showCategory('homenaje')">
+                <img src="https://i.postimg.cc/TPGMXk7M/Whats-App-Image-2026-09-28-at-11-00-49-PM.jpg" class="heart-img" alt="Homenaje">
+                <div class="category-subtitle">Siempre en el Corazón</div>
+                <button class="category-btn">Homenaje</button>
+            </div>
+            <div class="category-card" onclick="showCategory('celebracion')">
+                <img src="https://i.postimg.cc/mrRfGdX4/Whats-App-Image-2026-09-28-at-11-04-44-PM.jpg" class="heart-img" alt="Celebración">
+                <div class="category-subtitle">Momentos para Celebrar</div>
+                <button class="category-btn">Celebración</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- VISTA PRODUCTOS: AMOR -->
+    <section class="products-section" id="sec-amor">
+        <button class="back-btn" onclick="showMain()"><i class="fas fa-arrow-left"></i> Volver a categorías</button>
+        <div class="sub-header-tag">AMOR</div>
+        <p class="sub-header-quote">Todos nuestros packs incluyen una carta escrita por vos, porque hay cosas que solo vos podés decir.</p>
+        
+        <div class="product-list">
+            <div class="product-card">
+                <img src="https://images.unsplash.com/photo-1518895949257-7621c3c786d7?auto=format&fit=crop&w=600&q=80" class="product-img" alt="Primer Detalle">
+                <div class="product-info">
+                    <h3 class="product-title">Primer Detalle</h3>
+                    <p class="product-desc">3 Rosas + Carta personalizada</p>
+                    <div class="product-price">$150 USD</div>
+                    <button class="add-cart-btn" onclick="addToCartWithAnimation(event, 'Primer Detalle', '3 Rosas + Carta', 150)"><i class="fas fa-cart-plus"></i> Agregar al carrito</button>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <img src="https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=600&q=80" class="product-img" alt="Me Gustás">
+                <div class="product-info">
+                    <h3 class="product-title">Me Gustás</h3>
+                    <p class="product-desc">6 Rosas + Chocolates + Carta personalizada</p>
+                    <div class="product-price">$150 USD</div>
+                    <button class="add-cart-btn" onclick="addToCartWithAnimation(event, 'Me Gustás', '6 Rosas + Chocolates + Carta', 150)"><i class="fas fa-cart-plus"></i> Agregar al carrito</button>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <img src="https://images.unsplash.com/photo-1526047932273-341f2a7631f9?auto=format&fit=crop&w=600&q=80" class="product-img" alt="Amor Bonito">
+                <div class="product-info">
+                    <h3 class="product-title">Amor Bonito</h3>
+                    <p class="product-desc">9 Rosas + Peluche pequeño + Carta personalizada</p>
+                    <div class="product-price">$150 USD</div>
+                    <button class="add-cart-btn" onclick="addToCartWithAnimation(event, 'Amor Bonito', '9 Rosas + Peluche pequeño + Carta', 150)"><i class="fas fa-cart-plus"></i> Agregar al carrito</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- OTRAS VISTAS (Agradecimiento, Familia, Homenaje, Celebración) -->
+    <section class="products-section" id="sec-generic">
+        <button class="back-btn" onclick="showMain()"><i class="fas fa-arrow-left"></i> Volver a categorías</button>
+        <div class="sub-header-tag" id="generic-title">CATEGORÍA</div>
+        <p class="sub-header-quote">Todos nuestros detalles incluyen una carta escrita por vos para transmitir tus sentimientos.</p>
+        <div class="product-list" id="generic-products"></div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq-section">
+        <h2 class="section-title" style="display:block; text-align:center;">Preguntas Frecuentes</h2>
+        
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(this)">
+                <span>¿Cómo funciona la entrega del regalo?</span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer">
+                Nos brindás la dirección de la persona a sorprender junto con la fecha y hora. Nosotros nos encargamos de llevar el detalle en persona y entregárselo directamente a la persona indicada.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(this)">
+                <span>¿Con cuánto tiempo de anticipación debo encargar?</span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer">
+                Recomendamos hacer el pedido con al menos 24 a 48 hs de anticipación para asegurar stock y logística. De todas formas, podés consultarnos disponibilidad en el día vía WhatsApp.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(this)">
+                <span>¿La carta va impresa o escrita a mano?</span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer">
+                Podés indicarnos el texto al coordinar por WhatsApp. Lo preparamos con tipografía cuidada y sobre decorado listo para entregar.
+            </div>
+        </div>
+    </section>
+
+    <!-- BOTÓN FLOTANTE PERSONALIZADO -->
+    <div class="custom-float-container">
+        <div class="custom-float-btn" onclick="toggleCustomModal()" title="Pedido Personalizado">
+            <i class="fas fa-tools"></i>
+        </div>
+        <div class="custom-btn-label" onclick="toggleCustomModal()">
+            ✨ ¿Pedido especial?
+        </div>
+    </div>
+
+    <!-- BOTÓN FLOTANTE CARRITO -->
+    <div class="cart-float-btn" id="cart-float-target" onclick="toggleCart()">
+        <i class="fas fa-shopping-bag"></i>
+        <div class="cart-badge" id="cart-count">0</div>
+    </div>
+
+    <!-- OVERLAY -->
+    <div class="overlay" id="overlay" onclick="closeAllModals()"></div>
+
+    <!-- MODAL DE CONFIGURACIÓN Y ACCESIBILIDAD -->
+    <div class="settings-modal" id="settings-modal">
+        <div class="modal-header">
+            <h3>Accesibilidad y Opciones</h3>
+            <button class="modal-close" onclick="closeAllModals()">X</button>
+        </div>
+        <div class="modal-body">
+            
+            <div class="setting-option">
+                <div class="setting-info">
+                    <i class="fas fa-moon"></i>
+                    <div>
+                        <div class="setting-title">Modo Oscuro</div>
+                        <div class="setting-desc">Colores descansados para la vista</div>
+                    </div>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="toggle-dark" onchange="toggleDarkMode()">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="setting-option">
+                <div class="setting-info">
+                    <i class="fas fa-eye"></i>
+                    <div>
+                        <div class="setting-title">Modo Daltónico</div>
+                        <div class="setting-desc">Mayor contraste y referencias visuales</div>
+                    </div>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="toggle-cb" onchange="toggleCBMode()">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="setting-option">
+                <div class="setting-info">
+                    <i class="fas fa-brain"></i>
+                    <div>
+                        <div class="setting-title">Ayuda para Inatención</div>
+                        <div class="setting-desc">Sin animaciones y enfoque directo</div>
+                    </div>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="toggle-focus" onchange="toggleFocusMode()">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="setting-option">
+                <div class="setting-info">
+                    <i class="fas fa-text-height"></i>
+                    <div>
+                        <div class="setting-title">All Ages Friendly</div>
+                        <div class="setting-desc">Letra más grande y botones legibles</div>
+                    </div>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="toggle-all-ages" onchange="toggleAllAgesMode()">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- MODAL DE PEDIDO PERSONALIZADO -->
+    <div class="custom-modal" id="custom-modal">
+        <div class="modal-header">
+            <h3>Pedido Personalizado</h3>
+            <button class="modal-close" onclick="closeAllModals()">X</button>
+        </div>
+        <div class="modal-body">
+            <div class="price-notice-box">
+                <i class="fas fa-info-circle"></i>
+                <div>
+                    <strong>Aviso importante:</strong> Los pedidos personalizados pueden tener un costo adicional en función de las flores, chocolates o detalles específicos solicitados.
+                </div>
+            </div>
+            <p style="font-size: 0.9rem; color: #555;">Contanos qué querés armar para tu entrega especial:</p>
+            <textarea id="custom-text" class="custom-textarea" placeholder="Ejemplo: Quiero un ramo de 24 rosas rojas con chocolates y un peluche..."></textarea>
+        </div>
+        <div class="custom-footer">
+            <button class="whatsapp-btn" onclick="sendCustomToWhatsApp()"><i class="fab fa-whatsapp"></i> Enviar a WhatsApp</button>
+        </div>
+    </div>
+
+    <!-- MODAL DEL CARRITO -->
+    <div class="cart-modal" id="cart-modal">
+        <div class="modal-header">
+            <h3>Tu Carrito</h3>
+            <button class="modal-close" onclick="closeAllModals()">X</button>
+        </div>
+        <div class="modal-body" id="cart-modal-body">
+            <div id="cart-items">
+                <p style="text-align: center; color: #888; margin-top: 40px;">Tu carrito está vacío</p>
+            </div>
+
+            <!-- FORMULARIO DE DATOS DE ENTREGA -->
+            <div class="delivery-form" id="delivery-form-container" style="display: none;">
+                <!-- ADVERTENCIA DE ZONA GEOGRÁFICA -->
+                <div class="geo-notice-box">
+                    <i class="fas fa-map-marked-alt"></i>
+                    <div>
+                        ¡Atención! Las entregas se realizan exclusivamente en <strong>Rincón de los Sauces - Neuquén</strong> (no es cobertura a nivel nacional).
+                    </div>
+                </div>
+
+                <div class="delivery-title"><i class="fas fa-map-marker-alt"></i> Datos de la Entrega</div>
+                <div class="delivery-sub">⚠️ Ingresá la ubicación y fecha de la <strong>persona que recibe el regalo</strong> (no tus datos personales).</div>
+
+                <div class="form-group">
+                    <label>Dirección/Ubicación de quien recibe:</label>
+                    <input type="text" id="deliv-address" placeholder="Ej: Calle San Martín 456, Depto 2B">
+                </div>
+
+                <div class="form-group">
+                    <label>Día preferido:</label>
+                    <input type="date" id="deliv-date">
+                </div>
+            </div>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total Estimado:</span>
+                <span id="cart-total-price">$0 USD</span>
+            </div>
+            <button class="checkout-btn" onclick="checkout()"><i class="fab fa-whatsapp"></i> Enviar Pedido a WhatsApp</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; Mensajero del Corazón. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        let cart = [];
+
+        function showCategory(cat) {
+            document.getElementById('categories-sec').style.display = 'none';
+            document.querySelectorAll('.products-section').forEach(sec => sec.classList.remove('active'));
+
+            if (cat === 'amor') {
+                document.getElementById('sec-amor').classList.add('active');
+            } else {
+                const genericSec = document.getElementById('sec-generic');
+                const titleTag = document.getElementById('generic-title');
+                const container = document.getElementById('generic-products');
+                
+                titleTag.innerText = cat.toUpperCase();
+                container.innerHTML = getGenericCategoryHTML(cat);
+                genericSec.classList.add('active');
+            }
+            window.scrollTo({ top: 250, behavior: 'smooth' });
+        }
+
+        function showMain() {
+            document.querySelectorAll('.products-section').forEach(sec => sec.classList.remove('active'));
+            document.getElementById('categories-sec').style.display = 'block';
+        }
+
+        function addToCartWithAnimation(event, name, desc, price) {
+            const btn = event.currentTarget;
+            const btnRect = btn.getBoundingClientRect();
+            const cartBtn = document.getElementById('cart-float-target');
+            const cartRect = cartBtn.getBoundingClientRect();
+
+            const dot = document.createElement('div');
+            dot.className = 'flying-dot';
+            dot.style.left = `${btnRect.left + btnRect.width / 2 - 10}px`;
+            dot.style.top = `${btnRect.top + btnRect.height / 2 - 10}px`;
+            document.body.appendChild(dot);
+
+            setTimeout(() => {
+                dot.style.left = `${cartRect.left + cartRect.width / 2 - 10}px`;
+                dot.style.top = `${cartRect.top + cartRect.height / 2 - 10}px`;
+                dot.style.transform = 'scale(0.3)';
+                dot.style.opacity = '0.6';
+            }, 20);
+
+            setTimeout(() => {
+                dot.remove();
+                cart.push({ name, desc, price });
+                updateCartUI();
+                toggleCart();
+            }, 700);
+        }
+
+        function toggleCart() {
+            const cartModal = document.getElementById('cart-modal');
+            const overlay = document.getElementById('overlay');
+            const isOpen = cartModal.classList.contains('open');
+            
+            closeAllModals();
+            if (!isOpen) {
+                cartModal.classList.add('open');
+                overlay.classList.add('open');
+            }
+        }
+
+        function toggleCustomModal() {
+            const customModal = document.getElementById('custom-modal');
+            const overlay = document.getElementById('overlay');
+            const isOpen = customModal.classList.contains('open');
+            
+            closeAllModals();
+            if (!isOpen) {
+                customModal.classList.add('open');
+                overlay.classList.add('open');
+            }
+        }
+
+        function toggleSettingsModal() {
+            const settingsModal = document.getElementById('settings-modal');
+            const overlay = document.getElementById('overlay');
+            const isOpen = settingsModal.classList.contains('open');
+            
+            closeAllModals();
+            if (!isOpen) {
+                settingsModal.classList.add('open');
+                overlay.classList.add('open');
+            }
+        }
+
+        function closeAllModals() {
+            document.getElementById('cart-modal').classList.remove('open');
+            document.getElementById('custom-modal').classList.remove('open');
+            document.getElementById('settings-modal').classList.remove('open');
+            document.getElementById('overlay').classList.remove('open');
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+        }
+
+        function toggleCBMode() {
+            document.body.classList.toggle('cb-mode');
+        }
+
+        function toggleFocusMode() {
+            document.body.classList.toggle('focus-mode');
+        }
+
+        function toggleAllAgesMode() {
+            document.body.classList.toggle('all-ages-mode');
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const count = document.getElementById('cart-count');
+            const itemsContainer = document.getElementById('cart-items');
+            const totalPrice = document.getElementById('cart-total-price');
+            const formContainer = document.getElementById('delivery-form-container');
+
+            count.innerText = cart.length;
+
+            if (cart.length === 0) {
+                itemsContainer.innerHTML = '<p style="text-align: center; color: #888; margin-top: 40px;">Tu carrito está vacío</p>';
+                totalPrice.innerText = '$0 USD';
+                formContainer.style.display = 'none';
+                return;
+            }
+
+            formContainer.style.display = 'block';
+            let total = 0;
+            itemsContainer.innerHTML = '';
+
+            cart.forEach((item, index) => {
+                total += item.price;
+                const div = document.createElement('div');
+                div.className = 'cart-item';
+                div.innerHTML = `
+                    <div>
+                        <div class="cart-item-title">${item.name}</div>
+                        <div class="cart-item-desc">${item.desc}</div>
+                        <div style="font-size:0.85rem; font-weight:bold; color:var(--primary);"> $${item.price} USD</div>
+                    </div>
+                    <i class="fas fa-trash cart-remove" onclick="removeFromCart(${index})"></i>
+                `;
+                itemsContainer.appendChild(div);
+            });
+
+            totalPrice.innerText = '$' + total + ' USD';
+        }
+
+        function checkout() {
+            if (cart.length === 0) return alert('El carrito está vacío');
+
+            const address = document.getElementById('deliv-address').value.trim();
+            const date = document.getElementById('deliv-date').value;
+
+            let summary = "¡Hola! Quisiera realizar la siguiente compra en Mensajero del Corazón:\n\n";
+            summary += "📌 *DETALLE DEL PEDIDO:*\n";
+            cart.forEach((item, i) => {
+                summary += `${i+1}. ${item.name} - ${item.desc} ($${item.price} USD)\n`;
+            });
+
+            summary += "\n📍 *DATOS DE LA ENTREGA (Zona: Rincón de los Sauces, Neuquén):*\n";
+            summary += `• Ubicación: ${address ? address : 'A coordinar por chat'}\n`;
+            summary += `• Día: ${date ? date : 'A coordinar'}\n`;
+
+            const phoneNumber = "5492996155433"; 
+            const encodedMessage = encodeURIComponent(summary);
+            window.open(`https://wa.me/${phoneNumber}?text=${encodedMessage}`, '_blank');
+        }
+
+        function sendCustomToWhatsApp() {
+            const text = document.getElementById('custom-text').value.trim();
+            if (!text) {
+                alert("Por favor escribe los detalles de tu pedido.");
+                return;
+            }
+            const phoneNumber = "5492996155433"; 
+            const message = `¡Hola Mensajero del Corazón! Quisiera pedir un presupuesto para un pedido personalizado en Rincón de los Sauces:\n\n"${text}"`;
+            window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, '_blank');
+        }
+
+        function toggleFaq(btn) {
+            const item = btn.parentElement;
+            item.classList.toggle('open');
+        }
+
+        function getGenericCategoryHTML(cat) {
+            const data = {
+                agradecimiento: [
+                    { name: 'Un Pequeño Gracias', desc: 'Ramo pequeño mixto + Carta', price: 150, img: 'https://images.unsplash.com/photo-1508615070457-7baeba4003ab?w=600' },
+                    { name: 'Gracias de Corazón', desc: 'Ramo grande mixto + Pequeño detalle + Carta', price: 150, img: 'https://images.unsplash.com/photo-1563241527-3004b7be0ffd?w=600' }
+                ],
+                familia: [
+                    { name: 'Amor en Familia', desc: 'Ramo de flores especiales + Carta', price: 150, img: 'https://images.unsplash.com/photo-1582794543139-8ac9cb0f7b11?w=600' }
+                ],
+                homenaje: [
+                    { name: 'Siempre en el Corazón', desc: 'Ramo de flores blancas + Carta', price: 150, img: 'https://images.unsplash.com/photo-1561181286-d3fee7d55364?w=600' }
+                ],
+                celebracion: [
+                    { name: '¡Felicitaciones!', desc: 'Ramo mediano + Chocolates + Carta', price: 150, img: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=600' }
+                ]
+            };
+
+            const list = data[cat] || [];
+            return list.map(prod => `
+                <div class="product-card">
+                    <img src="${prod.img}" class="product-img" alt="${prod.name}">
+                    <div class="product-info">
+                        <h3 class="product-title">${prod.name}</h3>
+                        <p class="product-desc">${prod.desc}</p>
+                        <div class="product-price">$${prod.price} USD</div>
+                        <button class="add-cart-btn" onclick="addToCartWithAnimation(event, '${prod.name}', '${prod.desc}', ${prod.price})"><i class="fas fa-cart-plus"></i> Agregar al carrito</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+    </script>
+</body>
+</html>
